@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #0B1120;
+    --bg-sidebar: #0F172A;
+    --bg-card: #111827;
+    --bg-card-hover: #172033;
+    
+    --teal-primary: #14B8A6;
+    --teal-dark: #0D9488;
+    --emerald-accent: #10B981;
+    --green-dark-highlight: #134E4A;
+    
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --border-color: #1E293B;
+    
+    --status-success: #22C55E;
+    --status-warning: #F59E0B;
+    --status-error: #EF4444;
+
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #F8FAFC;
+    background-color: #0B1120;
+  }
+
+  body {
+    background-color: #0B1120;
+    color: #F8FAFC;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B1120;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Custom Utilities and Animations */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(1000%);
+  }
+}
+
+.animate-scanline {
+  animation: scanline 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Bounding box animation effects */
+.bounding-box-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: #14B8A6;
+}
+
+/* Custom Glass & Border Utilities */
+.card-dark {
+  background-color: #111827;
+  border: 1px solid #1E293B;
+  border-radius: 0.75rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-dark:hover {
+  border-color: #334155;
+}
+
+.card-interactive:hover {
+  background-color: #172033;
+  border-color: rgba(20, 184, 166, 0.4);
+  transform: translateY(-1px);
+}
+
+.glow-teal-sm {
+  box-shadow: 0 0 15px -3px rgba(20, 184, 166, 0.2);
+}
+
+.glow-teal-md {
+  box-shadow: 0 0 25px -5px rgba(20, 184, 166, 0.3);
+}
+
+/* Ensure no horizontal scroll on mobile */
+html, body, #root {
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
