@@ -1,116 +1,105 @@
 import React from 'react';
 import { ActionBadge } from '../common/Badge';
-import { CheckCircle2, HelpCircle, ArrowRight, Award } from 'lucide-react';
+import { Scale, CheckCircle2 } from 'lucide-react';
 
-export function ActionRankings({ rankings, rationale }) {
+export function ActionRankings({ rankings = [], rationale = "" }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans">
       {/* Rankings List */}
-      <div className="bg-[#111827] border border-[#1E293B] rounded-2xl p-5 sm:p-6 space-y-4">
-        <div className="flex items-center justify-between">
+      <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl">
+        <div className="flex items-center justify-between pb-3 border-b border-[#1E293B]">
           <div>
-            <h3 className="text-base sm:text-lg font-bold font-['Outfit'] text-slate-100">
-              Comparative Action Ranking
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400 block mb-0.5">
+              CIRCULAR DISPOSITION HIERARCHY
+            </span>
+            <h3 className="text-base sm:text-lg font-black font-['Outfit'] text-slate-100">
+              Comparative Action Priority Ranking
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Ranked options according to circular economy principles and lifecycle efficiency
-            </p>
           </div>
-          <span className="text-xs font-mono text-teal-400">Decision Priority</span>
+          <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30">
+            F-SECA EVALUATED
+          </span>
         </div>
 
         <div className="space-y-3">
-          {rankings.map((item) => (
-            <div
-              key={item.rank}
-              className={`p-4 rounded-xl border transition-all ${
-                item.isTop
-                  ? 'bg-gradient-to-r from-[#134E4A]/50 to-[#0F172A] border-teal-500/50 shadow-md shadow-teal-950/40'
-                  : 'bg-[#0F172A] border-[#1E293B]'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${
-                      item.isTop
-                        ? 'bg-teal-400 text-slate-950 shadow-md shadow-teal-400/30'
-                        : 'bg-slate-800 text-slate-400'
-                    }`}
-                  >
-                    #{item.rank}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <ActionBadge action={item.action} size="md" isTop={item.isTop} />
-                      <span className="text-xs font-bold text-slate-200">
-                        {item.badge}
-                      </span>
+          {rankings.map((item) => {
+            const isTop = item.rank === 1;
+
+            return (
+              <div
+                key={item.rank}
+                className={`p-4 rounded-xl border transition-all ${
+                  isTop
+                    ? 'bg-[#080D18] border-cyan-500/50 shadow-md shadow-cyan-950/40'
+                    : 'bg-[#080D18] border-[#1E293B]'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2.5">
+                    <div
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center font-mono font-bold text-xs ${
+                        isTop
+                          ? 'bg-cyan-400 text-slate-950 shadow-md shadow-cyan-400/30'
+                          : 'bg-[#0F172A] text-slate-400 border border-[#1E293B]'
+                      }`}
+                    >
+                      #{item.rank}
                     </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <ActionBadge action={item.actionType} />
+                        <span className="text-xs font-bold text-slate-200">
+                          {item.badge}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-right font-mono">
+                    <span
+                      className={`text-sm font-black ${
+                        isTop ? 'text-cyan-300' : 'text-slate-400'
+                      }`}
+                    >
+                      {item.score}
+                      <span className="text-xs font-normal text-slate-500">/100</span>
+                    </span>
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <span
-                    className={`text-sm font-extrabold font-mono ${
-                      item.isTop ? 'text-teal-300' : 'text-slate-400'
-                    }`}
-                  >
-                    {item.score}
-                    <span className="text-xs font-normal text-slate-500">/100</span>
+                <h4 className="text-xs font-bold text-slate-100 font-['Outfit'] mb-1">
+                  {item.action}
+                </h4>
+
+                <p className="text-xs text-slate-400 leading-relaxed font-sans mb-3">
+                  {item.summary}
+                </p>
+
+                {/* Metrics bar */}
+                <div className="flex flex-wrap items-center justify-between text-[11px] font-mono pt-2 border-t border-[#1E293B]/70 text-slate-400">
+                  <span>
+                    Cost: <strong className="text-slate-200">{item.cost}</strong>
+                  </span>
+                  <span>
+                    Life: <strong className="text-cyan-400">{item.extendedLife}</strong>
+                  </span>
+                  <span className="text-emerald-400 font-bold">
+                    {item.carbonDelta}
                   </span>
                 </div>
               </div>
-
-              {/* Progress bar */}
-              <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mb-2">
-                <div
-                  className={`h-full rounded-full ${
-                    item.isTop
-                      ? 'bg-teal-400'
-                      : item.rank === 2
-                      ? 'bg-blue-400'
-                      : item.rank === 3
-                      ? 'bg-purple-400'
-                      : 'bg-amber-400'
-                  }`}
-                  style={{ width: `${item.score}%` }}
-                />
-              </div>
-
-              <p className="text-xs text-slate-300 leading-relaxed">
-                {item.summary}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
+
+        {/* Rationale Note */}
+        {rationale && (
+          <div className="p-3.5 rounded-xl bg-[#080D18] border border-cyan-500/20 text-xs text-slate-300 leading-relaxed font-sans">
+            <strong className="text-cyan-400 font-mono block mb-1">OPTIMIZATION RATIONALE:</strong>
+            {rationale}
+          </div>
+        )}
       </div>
-
-      {/* Why This Recommendation Card */}
-      {rationale && rationale.length > 0 && (
-        <div className="bg-[#111827] border border-[#1E293B] rounded-2xl p-5 sm:p-6">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="p-1.5 rounded-lg bg-teal-500/10 text-teal-400">
-              <HelpCircle className="w-4 h-4" />
-            </div>
-            <h4 className="text-sm sm:text-base font-bold font-['Outfit'] text-slate-100">
-              Why this recommendation?
-            </h4>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-            {rationale.map((factor, idx) => (
-              <div
-                key={idx}
-                className="flex items-start gap-2.5 p-3 rounded-xl bg-[#0F172A] border border-[#1E293B] text-xs text-slate-300"
-              >
-                <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
-                <span className="leading-relaxed">{factor}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
