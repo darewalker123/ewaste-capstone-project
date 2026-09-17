@@ -1,36 +1,36 @@
 import React from 'react';
-import { Check, Loader2, Sparkles, Cpu, Wrench, Shield, Leaf, ListChecks } from 'lucide-react';
+import { Check, Loader2, ScanLine, ShieldAlert, Wrench, Scale, Radio, Cpu } from 'lucide-react';
 
 const pipelineSteps = [
   {
     step: 1,
-    title: 'Device Detection',
-    description: 'Scanning hardware geometry, brand indicators & modular chassis',
-    icon: Cpu,
+    title: 'STAGE 01: Optical Segmentation',
+    description: 'Scanning hardware geometry, component boundaries, and port chassis integrity',
+    icon: ScanLine,
   },
   {
     step: 2,
-    title: 'Condition Analysis',
-    description: 'Evaluating physical wear, screen integrity, ports & power rail indicators',
-    icon: Shield,
+    title: 'STAGE 02: RoHS Hazard & Toxicity Audit',
+    description: 'Pinpointing Li-ion swelling, solder joint stress, and toxic lead/mercury risks',
+    icon: ShieldAlert,
   },
   {
     step: 3,
-    title: 'Troubleshooting',
-    description: 'Querying diagnostic trees & cross-referencing repair manual databases',
+    title: 'STAGE 03: Schematics & Root-Cause Triage',
+    description: 'Cross-referencing OEM circuit diagrams and IPC-7711 rework protocols',
     icon: Wrench,
   },
   {
     step: 4,
-    title: 'Sustainability Evaluation',
-    description: 'Calculating carbon offset, repairability score & economic salvage value',
-    icon: Leaf,
+    title: 'STAGE 04: LCA Carbon & Material Modelling',
+    description: 'Quantifying embodied carbon preservation and precious metal recovery yield',
+    icon: Scale,
   },
   {
     step: 5,
-    title: 'Recommendation',
-    description: 'Generating ranked optimal pathway: Repair, Reuse, Donate, or Recycle',
-    icon: ListChecks,
+    title: 'STAGE 05: Circular Decision & Dispatch Match',
+    description: 'Generating optimal pathway and matching R2v3 certified intake hubs',
+    icon: Cpu,
   },
 ];
 
@@ -38,110 +38,85 @@ export function AnalysisProgress({ currentStep = 1 }) {
   const activeStepObj = pipelineSteps.find((s) => s.step === currentStep) || pipelineSteps[0];
 
   return (
-    <div className="bg-[#111827] border border-[#1E293B] rounded-2xl p-6 sm:p-8 max-w-2xl mx-auto shadow-2xl animate-in fade-in duration-300">
+    <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 sm:p-8 max-w-2xl mx-auto shadow-2xl animate-in fade-in duration-300 relative">
+      <div className="hud-corner-tl" />
+      <div className="hud-corner-tr" />
+      <div className="hud-corner-bl" />
+      <div className="hud-corner-br" />
+
       {/* Header */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs font-semibold uppercase tracking-wider mb-3">
-          <Sparkles className="w-3.5 h-3.5 text-teal-400 animate-spin" />
-          <span>Processing Hardware AI Pipeline</span>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono uppercase tracking-wider mb-3">
+          <Radio className="w-3.5 h-3.5 text-cyan-400 animate-led" />
+          <span>DIAGNOSTIC PIPELINE ENGAGED · BENCH ACTIVE</span>
         </div>
 
-        <h3 className="text-xl sm:text-2xl font-bold font-['Outfit'] text-slate-100 mb-2">
-          Analyzing your device...
+        <h3 className="text-xl sm:text-2xl font-black font-['Outfit'] text-slate-100 mb-2">
+          Processing Hardware Telemetry...
         </h3>
 
-        <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
+        <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto font-sans">
           {activeStepObj.description}
         </p>
       </div>
 
-      {/* Progress Bar Container */}
-      <div className="space-y-4">
+      {/* Progress Steps List */}
+      <div className="space-y-3 font-mono">
         {pipelineSteps.map((s) => {
-          const isDone = currentStep > s.step;
-          const isCurrent = currentStep === s.step;
-          const isUpcoming = currentStep < s.step;
+          const isDone = s.step < currentStep;
+          const isCurrent = s.step === currentStep;
           const Icon = s.icon;
 
           return (
             <div
               key={s.step}
-              className={`flex items-center justify-between p-3.5 rounded-xl border transition-all duration-300 ${
+              className={`p-3.5 rounded-xl border transition-all flex items-center justify-between ${
                 isCurrent
-                  ? 'bg-[#134E4A]/40 border-teal-500/50 shadow-md shadow-teal-500/10'
+                  ? 'bg-[#111C35] border-cyan-500/60 shadow-[0_0_20px_rgba(6,182,212,0.15)] text-slate-100'
                   : isDone
-                  ? 'bg-[#0F172A] border-emerald-500/30'
-                  : 'bg-[#0F172A]/50 border-[#1E293B] opacity-40'
+                  ? 'bg-[#080D18] border-emerald-500/30 text-slate-300'
+                  : 'bg-[#080D18]/50 border-[#1E293B]/40 text-slate-600'
               }`}
             >
-              <div className="flex items-center gap-3.5">
-                {/* Step indicator circle / icon */}
+              <div className="flex items-center gap-3">
                 <div
-                  className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs transition-all ${
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold ${
                     isDone
                       ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                       : isCurrent
-                      ? 'bg-teal-400 text-slate-950 shadow-md shadow-teal-400/40 scale-105 animate-pulse'
-                      : 'bg-slate-800 text-slate-500 border border-slate-700'
+                      ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40'
+                      : 'bg-[#0F172A] text-slate-600 border border-[#1E293B]'
                   }`}
                 >
                   {isDone ? (
-                    <Check className="w-4 h-4 text-emerald-400" />
+                    <Check className="w-4 h-4" />
                   ) : isCurrent ? (
-                    <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                    <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
                   ) : (
-                    <span>0{s.step}</span>
+                    <Icon className="w-3.5 h-3.5" />
                   )}
                 </div>
 
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h4
-                      className={`text-xs sm:text-sm font-semibold ${
-                        isCurrent
-                          ? 'text-teal-200 font-bold'
-                          : isDone
-                          ? 'text-slate-200'
-                          : 'text-slate-500'
-                      }`}
-                    >
-                      {s.title}
-                    </h4>
-                    {isCurrent && (
-                      <span className="text-[10px] text-teal-400 font-mono bg-teal-500/10 px-1.5 py-0.5 rounded border border-teal-500/30 animate-pulse">
-                        Analyzing...
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[11px] text-slate-400 hidden sm:block">
+                  <div className="text-xs font-bold">{s.title}</div>
+                  <div className="text-[10px] text-slate-400 font-sans hidden sm:block">
                     {s.description}
-                  </p>
+                  </div>
                 </div>
               </div>
 
-              {/* Status icon badge */}
-              <div className="shrink-0">
-                {isDone && (
-                  <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1">
-                    ✓ Verified
-                  </span>
+              <span className="text-[10px] font-bold">
+                {isDone ? (
+                  <span className="text-emerald-400">COMPLETE</span>
+                ) : isCurrent ? (
+                  <span className="text-cyan-400 animate-pulse">RUNNING...</span>
+                ) : (
+                  <span className="text-slate-600">QUEUED</span>
                 )}
-                {isCurrent && (
-                  <Icon className="w-4 h-4 text-teal-400 animate-pulse" />
-                )}
-                {isUpcoming && (
-                  <span className="text-xs text-slate-600 font-mono">Pending</span>
-                )}
-              </div>
+              </span>
             </div>
           );
         })}
-      </div>
-
-      {/* Simulated Pipeline footer */}
-      <div className="mt-6 pt-4 border-t border-[#1E293B] flex items-center justify-between text-[11px] text-slate-500 font-mono">
-        <span>Model Inference Stage: Step 0{currentStep}/05</span>
-        <span className="text-teal-400">Deterministic Rule Engine Active</span>
       </div>
     </div>
   );

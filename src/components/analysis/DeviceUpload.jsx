@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { Upload, Camera, Image, Sparkles, Laptop, Smartphone, Monitor } from 'lucide-react';
+import { Upload, Camera, Laptop, Smartphone, Monitor, Scan, Radio } from 'lucide-react';
+import { mockSampleDevices } from '../../data/mockData';
 
-export function DeviceUpload({ onImageSelect, onSelectSample }) {
+export function DeviceUpload({ onImageSelect, onSelectSample, activePresetKey = 'dell' }) {
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -53,111 +54,153 @@ export function DeviceUpload({ onImageSelect, onSelectSample }) {
         className="hidden"
       />
 
-      {/* Desktop Drag & Drop Area */}
+      {/* Optical Scan Chamber Viewport */}
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        onClick={() => fileInputRef.current?.click()}
-        className={`relative border-2 border-dashed rounded-2xl p-8 sm:p-12 text-center transition-all cursor-pointer ${
+        className={`relative overflow-hidden rounded-2xl border-2 transition-all duration-200 bg-[#080D18] p-7 sm:p-9 text-center ${
           isDragging
-            ? 'border-teal-400 bg-teal-500/10'
-            : 'border-[#1E293B] hover:border-teal-500/40 bg-[#0F172A] hover:bg-[#172033]'
+            ? 'border-cyan-400 bg-[#0F1C36] shadow-[0_0_30px_rgba(6,182,212,0.2)]'
+            : 'border-dashed border-[#1E293B] hover:border-cyan-500/50 hover:bg-[#0B1224]'
         }`}
       >
-        <div className="max-w-md mx-auto space-y-4">
-          <div className="flex items-center justify-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-teal-500/10 text-teal-400 border border-teal-500/20 flex items-center justify-center shadow-sm">
-              <Camera className="w-6 h-6" />
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-slate-800 text-slate-300 border border-slate-700 flex items-center justify-center shadow-sm">
-              <Upload className="w-6 h-6" />
-            </div>
+        {/* Tactical HUD Corner Marks */}
+        <div className="hud-corner-tl" />
+        <div className="hud-corner-tr" />
+        <div className="hud-corner-bl" />
+        <div className="hud-corner-br" />
+
+        {/* Scan Chamber Background Grid */}
+        <div className="absolute inset-0 scan-chamber-grid opacity-40 pointer-events-none" />
+
+        {/* Laser Sweep Line Simulation */}
+        <div className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-laser pointer-events-none shadow-[0_0_12px_rgba(6,182,212,0.8)]" />
+
+        <div className="relative z-10 flex flex-col items-center">
+          {/* Central Optical Targeting Reticle */}
+          <div className="relative w-16 h-16 rounded-2xl bg-[#0F172A] border border-cyan-500/40 flex items-center justify-center mb-4 shadow-lg shadow-cyan-950/80 group">
+            <Scan className="w-8 h-8 text-cyan-400 group-hover:scale-110 transition-transform" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-cyan-400 animate-led" />
           </div>
 
-          <div>
-            <h3 className="text-base sm:text-lg font-bold font-['Outfit'] text-slate-100 mb-1">
-              Upload your electronic device
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-              Drag & drop an image here or browse from your device
-            </p>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-[10px] font-mono uppercase tracking-wider mb-2">
+            <Radio className="w-2.5 h-2.5 text-cyan-400" />
+            <span>OPTICAL STAGE READY · CALIBRATED</span>
           </div>
 
-          <div className="pt-2">
+          <h3 className="text-base sm:text-lg font-black font-['Outfit'] text-slate-100 mb-1">
+            Place Hardware Specimen in Scan Chamber
+          </h3>
+
+          <p className="text-xs text-slate-400 max-w-md mx-auto mb-5 leading-relaxed font-sans">
+            Drag and drop high-resolution device photos, capture live telemetry via optical sensor, or select a calibrated bench specimen below.
+          </p>
+
+          {/* Action Trigger Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                fileInputRef.current?.click();
-              }}
-              className="px-5 py-2.5 text-xs sm:text-sm font-semibold text-slate-950 bg-teal-400 hover:bg-teal-300 active:bg-teal-500 rounded-xl transition-all shadow-md shadow-teal-500/20"
+              onClick={() => fileInputRef.current?.click()}
+              className="px-4 py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-mono font-black text-xs hover:bg-cyan-400 active:bg-cyan-600 transition-all flex items-center gap-2 shadow-md shadow-cyan-500/20"
             >
-              Browse Files
+              <Upload className="w-3.5 h-3.5" />
+              <span>UPLOAD OPTICAL CAPTURE</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => cameraInputRef.current?.click()}
+              className="px-4 py-2.5 rounded-xl bg-[#0F172A] border border-[#1E293B] hover:border-cyan-500/40 text-slate-200 font-mono font-bold text-xs hover:bg-[#162036] transition-all flex items-center gap-2"
+            >
+              <Camera className="w-3.5 h-3.5 text-cyan-400" />
+              <span>ACTIVATE CHAMBER CAMERA</span>
             </button>
           </div>
 
-          <p className="text-[11px] text-slate-500 font-medium">
-            PNG, JPG or JPEG supported (Max 15MB)
-          </p>
+          <span className="text-[10px] font-mono text-slate-500 mt-3">
+            Supported Formats: PNG, JPG, JPEG (Max 15MB) · Auto-Segmentation Active
+          </span>
         </div>
       </div>
 
-      {/* Mobile-Optimized Prominent Actions */}
-      <div className="grid grid-cols-2 gap-3 sm:hidden">
-        <button
-          type="button"
-          onClick={() => cameraInputRef.current?.click()}
-          className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-teal-500/15 border border-teal-500/40 text-teal-300 font-semibold text-xs active:bg-teal-500/25 transition-colors"
-        >
-          <Camera className="w-4 h-4 text-teal-400" />
-          <span>Take Photo</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-xs active:bg-slate-700 transition-colors"
-        >
-          <Image className="w-4 h-4 text-slate-400" />
-          <span>Choose from Gallery</span>
-        </button>
-      </div>
-
-      {/* Quick Preset Devices for Instant Demo */}
-      <div className="pt-2">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Sparkles className="w-3 h-3 text-teal-400" /> Or load sample device preset:
+      {/* Preset Hardware Specimen Selector */}
+      <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-4 sm:p-5">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+            <Scan className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Select Calibrated Bench Specimen (1-Click Test)</span>
+          </span>
+          <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/30">
+            3 PROFILES LOADED
           </span>
         </div>
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Dell Laptop */}
           <button
             type="button"
             onClick={() => onSelectSample('dell')}
-            className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#111827] border border-[#1E293B] hover:border-teal-500/40 hover:bg-[#172033] text-xs font-medium text-slate-300 transition-all"
+            className={`p-3 rounded-xl border text-left transition-all ${
+              activePresetKey === 'dell'
+                ? 'bg-[#111C35] border-cyan-500/50 shadow-md shadow-cyan-950/40'
+                : 'bg-[#080D18] border-[#1E293B] hover:border-cyan-500/30 hover:bg-[#0D1526]'
+            }`}
           >
-            <Laptop className="w-3.5 h-3.5 text-teal-400" />
-            <span className="truncate">Dell Laptop</span>
+            <div className="flex items-center justify-between mb-1.5">
+              <div className="p-1.5 rounded-lg bg-[#0F172A] text-cyan-400 border border-[#1E293B]">
+                <Laptop className="w-4 h-4" />
+              </div>
+              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                REP: 8.4/10
+              </span>
+            </div>
+            <div className="text-xs font-bold text-slate-100">{mockSampleDevices.dell.name}</div>
+            <div className="text-[10px] text-slate-400 mt-0.5">eDP Backlight Fuse Fault</div>
           </button>
 
+          {/* iPhone 12 */}
           <button
             type="button"
             onClick={() => onSelectSample('iphone')}
-            className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#111827] border border-[#1E293B] hover:border-blue-500/40 hover:bg-[#172033] text-xs font-medium text-slate-300 transition-all"
+            className={`p-3 rounded-xl border text-left transition-all ${
+              activePresetKey === 'iphone'
+                ? 'bg-[#111C35] border-cyan-500/50 shadow-md shadow-cyan-950/40'
+                : 'bg-[#080D18] border-[#1E293B] hover:border-cyan-500/30 hover:bg-[#0D1526]'
+            }`}
           >
-            <Smartphone className="w-3.5 h-3.5 text-blue-400" />
-            <span className="truncate">iPhone 12</span>
+            <div className="flex items-center justify-between mb-1.5">
+              <div className="p-1.5 rounded-lg bg-[#0F172A] text-emerald-400 border border-[#1E293B]">
+                <Smartphone className="w-4 h-4" />
+              </div>
+              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                REP: 6.2/10
+              </span>
+            </div>
+            <div className="text-xs font-bold text-slate-100">{mockSampleDevices.iphone.name}</div>
+            <div className="text-[10px] text-slate-400 mt-0.5">Li-Ion Cell Depleted (74%)</div>
           </button>
 
+          {/* Samsung Monitor */}
           <button
             type="button"
             onClick={() => onSelectSample('monitor')}
-            className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#111827] border border-[#1E293B] hover:border-amber-500/40 hover:bg-[#172033] text-xs font-medium text-slate-300 transition-all"
+            className={`p-3 rounded-xl border text-left transition-all ${
+              activePresetKey === 'monitor'
+                ? 'bg-[#111C35] border-cyan-500/50 shadow-md shadow-cyan-950/40'
+                : 'bg-[#080D18] border-[#1E293B] hover:border-cyan-500/30 hover:bg-[#0D1526]'
+            }`}
           >
-            <Monitor className="w-3.5 h-3.5 text-amber-400" />
-            <span className="truncate">Samsung Monitor</span>
+            <div className="flex items-center justify-between mb-1.5">
+              <div className="p-1.5 rounded-lg bg-[#0F172A] text-amber-400 border border-[#1E293B]">
+                <Monitor className="w-4 h-4" />
+              </div>
+              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                REP: 3.1/10
+              </span>
+            </div>
+            <div className="text-xs font-bold text-slate-100">{mockSampleDevices.monitor.name}</div>
+            <div className="text-[10px] text-slate-400 mt-0.5">Curved VA Matrix Rupture</div>
           </button>
         </div>
       </div>

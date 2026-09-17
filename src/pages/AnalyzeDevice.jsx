@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, ScanLine, ArrowRight } from 'lucide-react';
+import { ScanLine, ArrowRight, Radio, Activity } from 'lucide-react';
 import { DeviceUpload } from '../components/analysis/DeviceUpload';
 import { ImagePreview } from '../components/analysis/ImagePreview';
 import { ProblemInput } from '../components/analysis/ProblemInput';
@@ -11,6 +11,8 @@ import { useAnalysis } from '../context/AnalysisContext';
 export function AnalyzeDevice() {
   const {
     currentAnalysis,
+    selectedDeviceKey,
+    switchDevice,
     uploadedImage,
     setUploadedImage,
     problemDescription,
@@ -22,27 +24,16 @@ export function AnalyzeDevice() {
     isAnalyzing,
     analysisStep,
     hasCompletedAnalysis,
-    setHasCompletedAnalysis,
     runSimulatedAnalysis,
     resetAnalysisFlow,
-    loadSampleDevice,
   } = useAnalysis();
 
-  const handleImageSelect = (url, name) => {
+  const handleImageSelect = (url) => {
     setUploadedImage(url);
   };
 
   const handleSelectSample = (sampleType) => {
-    if (sampleType === 'dell') {
-      setUploadedImage(null);
-      setProblemDescription("My laptop turns on and the fan spins, but the screen stays black. An external monitor worked previously.");
-    } else if (sampleType === 'iphone') {
-      setUploadedImage(null);
-      setProblemDescription("iPhone 12 with 84% battery health, slight micro-scratches on screen frame but touchscreen works flawlessly.");
-    } else if (sampleType === 'monitor') {
-      setUploadedImage(null);
-      setProblemDescription("Curved Samsung 27-inch monitor with cracked internal VA matrix panel after a fall.");
-    }
+    switchDevice(sampleType);
   };
 
   const handleStartAnalysis = (e) => {
@@ -74,23 +65,23 @@ export function AnalyzeDevice() {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* Header */}
-      <div className="bg-[#111827] border border-[#1E293B] rounded-2xl p-6 sm:p-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs font-semibold uppercase tracking-wider mb-3">
-          <ScanLine className="w-3.5 h-3.5 text-teal-400" />
-          <span>Core Diagnostic Workflow</span>
+      <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 sm:p-7 shadow-xl">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono uppercase tracking-wider mb-2">
+          <Radio className="w-3 h-3 text-cyan-400 animate-led" />
+          <span>OPTICAL SCAN CHAMBER & DIAGNOSTIC INTAKE</span>
         </div>
 
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold font-['Outfit'] text-slate-50 tracking-tight">
-          Analyze Your Device
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-black font-['Outfit'] text-slate-50 tracking-tight">
+          Analyze Hardware Specimen
         </h2>
 
-        <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl leading-relaxed">
-          Upload a photo and describe the problem to get a complete sustainability assessment, guided troubleshooting steps, and certified drop-off locations.
+        <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl leading-relaxed font-sans">
+          Feed high-resolution device photos into the optical scan chamber, define hardware symptoms, and generate component-level repairability and toxicity reports.
         </p>
       </div>
 
       <form onSubmit={handleStartAnalysis} className="space-y-6">
-        {/* Image Upload / Preview Area */}
+        {/* Image Upload / Scan Chamber Preview */}
         {uploadedImage ? (
           <ImagePreview
             imageSrc={uploadedImage}
@@ -101,38 +92,34 @@ export function AnalyzeDevice() {
           <DeviceUpload
             onImageSelect={handleImageSelect}
             onSelectSample={handleSelectSample}
+            activePresetKey={selectedDeviceKey}
           />
         )}
 
-        {/* Problem Description Textarea */}
+        {/* Problem Description & Symptoms */}
         <ProblemInput
           value={problemDescription}
-          onChange={setProblemDescription}
-          onClear={() => setProblemDescription("")}
+          onChange={(e) => setProblemDescription(e.target.value)}
         />
 
-        {/* Location Selector */}
+        {/* Location Drop-Off Preference */}
         <LocationSelector
           mode={locationMode}
           onModeChange={setLocationMode}
-          manualValue={manualLocation}
-          onManualChange={setManualLocation}
+          manualLocation={manualLocation}
+          onManualLocationChange={setManualLocation}
         />
 
-        {/* Submit Analyze Button */}
+        {/* Submit Button */}
         <div className="pt-2">
           <button
             type="submit"
-            className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-300 hover:to-emerald-300 active:from-teal-500 active:to-emerald-500 text-slate-950 font-extrabold text-base transition-all duration-200 shadow-xl shadow-teal-500/20 hover:shadow-teal-500/35 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-cyan-400 to-emerald-400 hover:from-cyan-300 hover:to-emerald-300 text-slate-950 font-mono font-black text-sm transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:-translate-y-0.5 flex items-center justify-center gap-2"
           >
-            <Sparkles className="w-5 h-5 text-slate-950" />
-            <span>Analyze Device</span>
-            <ArrowRight className="w-5 h-5 text-slate-950" />
+            <ScanLine className="w-4 h-4" />
+            <span>RUN FULL HARDWARE & LCA DIAGNOSTICS</span>
+            <ArrowRight className="w-4 h-4" />
           </button>
-
-          <p className="text-center text-xs text-slate-500 mt-2.5">
-            Deterministic rule engine simulated analysis • No external API data transmitted
-          </p>
         </div>
       </form>
     </div>

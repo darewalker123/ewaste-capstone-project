@@ -2,28 +2,28 @@ import React from 'react';
 import { SustainabilityScore } from '../components/sustainability/SustainabilityScore';
 import { CriteriaBreakdown } from '../components/sustainability/CriteriaBreakdown';
 import { ActionRankings } from '../components/sustainability/ActionRankings';
-import { defaultAnalysisResult } from '../data/mockData';
-import { Leaf } from 'lucide-react';
+import { DecisionSimulator } from '../components/sustainability/DecisionSimulator';
+import { defaultAnalysisResult, mockDashboardStats } from '../data/mockData';
+import { Scale, Cpu, ShieldAlert, Radio } from 'lucide-react';
 
 export function Sustainability() {
   const result = defaultAnalysisResult;
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
+    <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="bg-[#111827] border border-[#1E293B] rounded-2xl p-6 sm:p-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-3">
-          <Leaf className="w-3.5 h-3.5 text-emerald-400" />
-          <span>Circular Economy Impact Model</span>
+      <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 sm:p-7 shadow-xl">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono uppercase tracking-wider mb-2">
+          <Radio className="w-3 h-3 text-cyan-400 animate-led" />
+          <span>LIFECYCLE ASSESSMENT (LCA) & RoHS COMPLIANCE BENCH</span>
         </div>
 
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold font-['Outfit'] text-slate-50 tracking-tight">
-          Sustainability Evaluation
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-black font-['Outfit'] text-slate-50 tracking-tight">
+          Sustainability & Toxicity Matrix
         </h2>
 
-        <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
-          Multiple factors are considered when determining the most sustainable option.
-          We quantify lifecycle emissions, remaining hardware utility, component salvageability, and localized repair access.
+        <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed font-sans">
+          Quantifies 7 key multidimensional circular metrics: embodied carbon preservation, modular disassembly feasibility, hazardous substance mitigation, and commodity mineral recovery.
         </p>
       </div>
 
@@ -33,6 +33,9 @@ export function Sustainability() {
         grade={result.sustainability.grade}
         carbonSavings={result.sustainability.carbonSavingsKg}
       />
+
+      {/* Interactive Decision Simulator */}
+      <DecisionSimulator />
 
       {/* Grid: 7 Criteria Breakdown + Comparative Action Ranking */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

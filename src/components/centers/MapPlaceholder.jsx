@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
-import { MapPin, Navigation, Layers, Compass, Plus, Minus, Wrench, Recycle } from 'lucide-react';
+import { MapPin, Navigation, Layers, Compass, Plus, Minus, Wrench, Recycle, Radio } from 'lucide-react';
 
 export function MapPlaceholder({ centers, selectedCenter, onSelectCenter }) {
   const [zoomLevel, setZoomLevel] = useState(1);
 
   return (
-    <div className="relative w-full h-80 sm:h-96 rounded-2xl bg-[#090E1A] border border-[#1E293B] overflow-hidden select-none shadow-xl flex flex-col justify-between p-4">
+    <div className="relative w-full h-80 sm:h-96 rounded-2xl bg-[#080D18] border border-[#1E293B] overflow-hidden select-none shadow-2xl flex flex-col justify-between p-4">
+      <div className="hud-corner-tl" />
+      <div className="hud-corner-tr" />
+      <div className="hud-corner-bl" />
+      <div className="hud-corner-br" />
+
       {/* SVG Map Background Grid and Road Vector Simulation */}
       <svg
-        className="absolute inset-0 w-full h-full opacity-30 pointer-events-none"
+        className="absolute inset-0 w-full h-full opacity-40 pointer-events-none"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
@@ -23,31 +28,32 @@ export function MapPlaceholder({ centers, selectedCenter, onSelectCenter }) {
         </defs>
         <rect width="100%" height="100%" fill="url(#mapGrid)" />
 
-        {/* Simulated Arterial Roads / Transit Lines */}
+        {/* Simulated Roads & Transit Corridors */}
         <path
           d="M -50 120 Q 200 180 500 100 T 1000 220"
           fill="none"
-          stroke="#1E293B"
+          stroke="#162036"
           strokeWidth="6"
         />
         <path
           d="M 180 -50 Q 220 200 190 450"
           fill="none"
-          stroke="#1E293B"
+          stroke="#162036"
           strokeWidth="4"
         />
         <path
           d="M 450 -50 Q 400 180 520 450"
           fill="none"
-          stroke="#1E293B"
+          stroke="#162036"
           strokeWidth="5"
         />
         <path
           d="M -50 280 Q 300 240 700 320"
           fill="none"
-          stroke="#334155"
-          strokeWidth="2"
+          stroke="#06B6D4"
+          strokeWidth="1.5"
           strokeDasharray="4 4"
+          opacity="0.3"
         />
       </svg>
 
@@ -57,83 +63,81 @@ export function MapPlaceholder({ centers, selectedCenter, onSelectCenter }) {
         style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
       >
         <div className="relative flex items-center justify-center">
-          <span className="w-8 h-8 rounded-full bg-teal-400/20 animate-ping absolute" />
-          <div className="w-4 h-4 rounded-full bg-teal-400 border-2 border-slate-900 shadow-md shadow-teal-400/50 relative z-10" />
+          <span className="w-8 h-8 rounded-full bg-cyan-400/20 animate-ping absolute" />
+          <span className="w-4 h-4 rounded-full bg-cyan-400 border-2 border-slate-950 shadow-md shadow-cyan-400/50" />
         </div>
-        <span className="mt-1 text-[10px] font-mono font-bold text-teal-300 bg-slate-900/90 px-2 py-0.5 rounded-full border border-teal-500/30">
-          Your Location
-        </span>
+        <div className="bg-[#080D18]/90 border border-cyan-500/40 text-cyan-300 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded shadow mt-1 whitespace-nowrap">
+          BENCH GPS LOCATION
+        </div>
       </div>
 
-      {/* Interactive Center Pins */}
-      {centers.map((c) => {
-        const isSelected = selectedCenter?.id === c.id;
-        const isRepair = c.type.toLowerCase() === 'repair';
+      {/* Render Facility Pins */}
+      {centers.map((center) => {
+        const isSelected = selectedCenter?.id === center.id;
+        const coords = center.coordinates || { x: 50, y: 50 };
+        const isRepair = center.category === 'repair';
+        const isRecycle = center.category === 'recycling';
 
         return (
           <div
-            key={c.id}
-            onClick={() => onSelectCenter(c)}
-            className="absolute z-20 cursor-pointer group transition-transform duration-200 hover:scale-125"
+            key={center.id}
+            onClick={() => onSelectCenter(center)}
             style={{
-              top: `${c.coordinates.y}%`,
-              left: `${c.coordinates.x}%`,
-              transform: 'translate(-50%, -100%)',
+              top: `${coords.y}%`,
+              left: `${coords.x}%`,
+              transform: 'translate(-50%, -50%)',
             }}
+            className="absolute z-20 cursor-pointer group"
           >
-            {/* Tooltip on hover/selected */}
             <div
-              className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold whitespace-nowrap transition-all shadow-lg ${
+              className={`relative flex items-center justify-center p-2 rounded-xl transition-all shadow-lg ${
                 isSelected
-                  ? 'bg-teal-400 text-slate-950 opacity-100 scale-100'
-                  : 'bg-slate-900 text-slate-200 border border-slate-700 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100'
-              }`}
-            >
-              <div>{c.name}</div>
-              <div className="text-[9px] opacity-80">{c.distance} • {c.type}</div>
-            </div>
-
-            {/* Pin Marker */}
-            <div
-              className={`p-2 rounded-full border-2 shadow-lg transition-all ${
-                isSelected
-                  ? 'bg-teal-400 text-slate-950 border-white ring-4 ring-teal-500/30 scale-110'
+                  ? 'bg-cyan-400 text-slate-950 scale-125 ring-4 ring-cyan-500/30'
                   : isRepair
-                  ? 'bg-teal-900 text-teal-300 border-teal-400'
-                  : 'bg-amber-900 text-amber-300 border-amber-400'
+                  ? 'bg-[#0F172A] border border-cyan-500/50 text-cyan-400 group-hover:scale-110'
+                  : isRecycle
+                  ? 'bg-[#0F172A] border border-amber-500/50 text-amber-400 group-hover:scale-110'
+                  : 'bg-[#0F172A] border border-emerald-500/50 text-emerald-400 group-hover:scale-110'
               }`}
             >
               {isRepair ? (
-                <Wrench className="w-3.5 h-3.5" />
+                <Wrench className="w-4 h-4" />
               ) : (
-                <Recycle className="w-3.5 h-3.5" />
+                <Recycle className="w-4 h-4" />
               )}
+            </div>
+
+            {/* Tooltip on hover */}
+            <div
+              className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-[200px] bg-[#0F172A] border border-[#1E293B] text-slate-100 text-[10px] font-mono px-2 py-1 rounded-lg shadow-xl pointer-events-none transition-opacity ${
+                isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+              }`}
+            >
+              <div className="font-bold text-cyan-400 truncate">{center.name}</div>
+              <div className="text-[9px] text-slate-400">{center.complianceBadge || center.type}</div>
             </div>
           </div>
         );
       })}
 
-      {/* Top Map UI Controls */}
-      <div className="relative z-10 flex items-center justify-between">
-        <div className="flex items-center gap-2 bg-[#0F172A]/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#1E293B] text-xs text-slate-300">
-          <Compass className="w-3.5 h-3.5 text-teal-400" />
-          <span className="font-semibold text-slate-200">Local Area Map</span>
-          <span className="text-[10px] text-slate-400">• Simulated Coverage</span>
+      {/* Top Map HUD Bar */}
+      <div className="relative z-30 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 bg-[#0F172A]/90 backdrop-blur-sm border border-[#1E293B] px-3 py-1.5 rounded-xl text-xs font-mono text-slate-200">
+          <Radio className="w-3 h-3 text-cyan-400 animate-led" />
+          <span>GEOSPATIAL INTAKE RADAR</span>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-[#0F172A]/90 backdrop-blur-md p-1 rounded-xl border border-[#1E293B]">
+        <div className="flex items-center gap-1.5 bg-[#0F172A]/90 backdrop-blur-sm border border-[#1E293B] p-1 rounded-xl text-xs">
           <button
-            type="button"
-            onClick={() => setZoomLevel((z) => Math.min(z + 0.2, 1.6))}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            onClick={() => setZoomLevel((z) => Math.min(z + 0.2, 2))}
+            className="p-1 rounded text-slate-400 hover:text-white"
             title="Zoom In"
           >
             <Plus className="w-3.5 h-3.5" />
           </button>
           <button
-            type="button"
-            onClick={() => setZoomLevel((z) => Math.max(z - 0.2, 0.8))}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            onClick={() => setZoomLevel((z) => Math.max(z - 0.2, 0.6))}
+            className="p-1 rounded text-slate-400 hover:text-white"
             title="Zoom Out"
           >
             <Minus className="w-3.5 h-3.5" />
@@ -142,21 +146,19 @@ export function MapPlaceholder({ centers, selectedCenter, onSelectCenter }) {
       </div>
 
       {/* Bottom Map Legend */}
-      <div className="relative z-10 flex items-center justify-between bg-[#0F172A]/90 backdrop-blur-md px-3 py-2 rounded-xl border border-[#1E293B] text-xs">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-teal-400" />
-            <span className="text-[11px] text-slate-300">Repair Centers</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-            <span className="text-[11px] text-slate-300">Recycling Hubs</span>
-          </div>
+      <div className="relative z-30 flex flex-wrap items-center gap-2 bg-[#080D18]/90 backdrop-blur-sm border border-[#1E293B] px-3 py-1.5 rounded-xl text-[10px] font-mono text-slate-400 self-start">
+        <div className="flex items-center gap-1">
+          <span className="w-2 h-2 rounded-full bg-cyan-400" />
+          <span>Repair Hubs</span>
         </div>
-
-        <span className="text-[10px] text-slate-400 font-mono">
-          Radius: 5.0 km
-        </span>
+        <div className="flex items-center gap-1">
+          <span className="w-2 h-2 rounded-full bg-amber-400" />
+          <span>R2v3 Smelters</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <span className="w-2 h-2 rounded-full bg-emerald-400" />
+          <span>STEM Reuse</span>
+        </div>
       </div>
     </div>
   );

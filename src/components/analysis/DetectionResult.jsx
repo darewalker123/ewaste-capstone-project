@@ -1,117 +1,208 @@
-import React from 'react';
-import { Cpu, CheckCircle2, Shield, Calendar, Layers, Tag } from 'lucide-react';
+import React, { useState } from 'react';
+import { Cpu, CheckCircle2, Radio, Layers } from 'lucide-react';
 
 export function DetectionResult({ device, uploadedImage }) {
+  const components = device.components || [];
+  const [selectedCompId, setSelectedCompId] = useState(components[0]?.id || null);
+
+  const activeComponent = components.find((c) => c.id === selectedCompId) || components[0];
+
   return (
-    <div className="bg-[#111827] border border-[#1E293B] rounded-2xl p-5 sm:p-6">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-5 sm:p-6 shadow-xl relative">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5 pb-4 border-b border-[#1E293B]">
         <div>
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-teal-400">
-            01 / Hardware Identification
-          </span>
-          <h3 className="text-base sm:text-lg font-bold font-['Outfit'] text-slate-100 mt-0.5">
-            Device Detection
+          <div className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold mb-0.5">
+            <Radio className="w-3 h-3 text-cyan-400 animate-led" />
+            <span>OPTICAL SEGMENTATION & MULTI-COMPONENT BOUNDING BOX HUD</span>
+          </div>
+          <h3 className="text-base sm:text-lg font-black font-['Outfit'] text-slate-100">
+            Hardware Component Diagnostics & Inspection Bay
           </h3>
         </div>
 
-        <div className="flex items-center gap-2 bg-teal-500/10 border border-teal-500/30 px-2.5 py-1 rounded-full text-xs font-semibold text-teal-300">
-          <CheckCircle2 className="w-3.5 h-3.5 text-teal-400" />
-          <span>Confidence {device.detectionConfidence}%</span>
+        <div className="flex items-center gap-2 font-mono text-xs">
+          <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full text-emerald-400 font-bold">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>SEGMENTATION CONFIDENCE: 96.4%</span>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
-        {/* Device Image with Simulated Bounding Box Overlay */}
-        <div className="md:col-span-5 relative bg-[#0B1120] border border-[#1E293B] rounded-xl overflow-hidden min-h-52 sm:min-h-60 flex items-center justify-center p-3">
-          {/* Main Visual Image / Graphic */}
-          <div className="relative w-full h-full flex items-center justify-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left: Interactive Bounding Box Chamber Graphic */}
+        <div className="lg:col-span-6 relative bg-[#080D18] border border-[#1E293B] rounded-2xl overflow-hidden min-h-[320px] flex items-center justify-center p-4">
+          {/* Tactical HUD Corner Marks */}
+          <div className="hud-corner-tl" />
+          <div className="hud-corner-tr" />
+          <div className="hud-corner-bl" />
+          <div className="hud-corner-br" />
+
+          {/* Grid background */}
+          <div className="absolute inset-0 scan-chamber-grid opacity-30 pointer-events-none" />
+
+          {/* Device Mock Graphic Frame */}
+          <div className="relative w-full h-72 rounded-xl bg-[#0B1224] border border-[#1E293B]/70 flex flex-col items-center justify-center p-3 overflow-hidden">
             {uploadedImage ? (
               <img
                 src={uploadedImage}
                 alt="Detected device"
-                className="w-full h-full object-contain max-h-56"
+                className="w-full h-full object-contain"
               />
             ) : (
-              <div className="w-full h-48 bg-gradient-to-tr from-slate-900 via-slate-800 to-slate-900 rounded-lg flex flex-col items-center justify-center p-4 text-center">
-                <Cpu className="w-12 h-12 text-teal-400 mb-2 opacity-80" />
-                <span className="text-xs font-bold text-slate-200 font-['Outfit']">
+              <div className="relative w-full h-full flex flex-col items-center justify-center text-center p-4">
+                <Cpu className="w-16 h-16 text-cyan-400/40 mb-2" />
+                <span className="text-xs font-mono font-bold text-slate-300">
                   {device.name}
                 </span>
-                <span className="text-[10px] text-slate-400">
-                  {device.category}
+                <span className="text-[10px] font-mono text-slate-500">
+                  SN: {device.sn || 'SN-8902-LAB'} · FORM: {device.formFactor}
                 </span>
               </div>
             )}
 
-            {/* Bounding Box Visual Overlay (Simulates YOLO detection tag) */}
-            <div
-              className="absolute border-2 border-teal-400 rounded-sm pointer-events-none shadow-[0_0_15px_rgba(20,184,166,0.3)] animate-pulse"
-              style={{
-                top: device.boundingBox?.y || '12%',
-                left: device.boundingBox?.x || '10%',
-                width: device.boundingBox?.width || '80%',
-                height: device.boundingBox?.height || '76%',
-              }}
-            >
-              {/* Corner tick marks */}
-              <span className="absolute -top-1 -left-1 w-2.5 h-2.5 bg-teal-300" />
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-teal-300" />
-              <span className="absolute -bottom-1 -left-1 w-2.5 h-2.5 bg-teal-300" />
-              <span className="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-teal-300" />
+            {/* Render Multi-Component Bounding Boxes */}
+            {components.map((comp) => {
+              const isSelected = comp.id === selectedCompId;
+              const isDefect = comp.statusType === 'defect';
+              const isWarning = comp.statusType === 'warning';
 
-              {/* Tag label on top of box */}
-              <div className="absolute -top-6 left-0 bg-teal-500 text-slate-950 text-[10px] font-bold font-mono px-2 py-0.5 rounded-t shadow-sm flex items-center gap-1 whitespace-nowrap">
-                <span>{device.name}</span>
-                <span className="opacity-80">[{device.detectionConfidence}%]</span>
-              </div>
-            </div>
+              const boxColor = isDefect
+                ? 'border-rose-400 bg-rose-500/10 text-rose-300'
+                : isWarning
+                ? 'border-amber-400 bg-amber-500/10 text-amber-300'
+                : 'border-cyan-400 bg-cyan-500/10 text-cyan-300';
+
+              const tagBg = isDefect
+                ? 'bg-rose-500 text-slate-950'
+                : isWarning
+                ? 'bg-amber-500 text-slate-950'
+                : 'bg-cyan-500 text-slate-950';
+
+              return (
+                <button
+                  key={comp.id}
+                  type="button"
+                  onClick={() => setSelectedCompId(comp.id)}
+                  style={{
+                    top: comp.box.y,
+                    left: comp.box.x,
+                    width: comp.box.width,
+                    height: comp.box.height,
+                  }}
+                  className={`absolute border-2 rounded-sm transition-all text-left group cursor-pointer ${boxColor} ${
+                    isSelected
+                      ? 'ring-2 ring-white shadow-[0_0_20px_rgba(6,182,212,0.4)] z-20'
+                      : 'opacity-75 hover:opacity-100 z-10'
+                  }`}
+                >
+                  {/* Tag label */}
+                  <div
+                    className={`absolute -top-5 left-0 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-t shadow flex items-center gap-1 ${tagBg}`}
+                  >
+                    <span>{comp.name.split(' ')[0]}</span>
+                    <span>[{comp.confidence}%]</span>
+                  </div>
+
+                  {/* Corner accents */}
+                  <span className="absolute -top-1 -left-1 w-1.5 h-1.5 bg-white" />
+                  <span className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-white" />
+                  <span className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-white" />
+                  <span className="absolute -bottom-1 -right-1 w-1.5 h-1.5 bg-white" />
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="absolute bottom-2 left-4 right-4 flex items-center justify-between text-[10px] font-mono text-slate-400 bg-[#080D18]/90 px-2 py-1 rounded border border-[#1E293B]">
+            <span>CLICK BOX TO INSPECT TELEMETRY</span>
+            <span className="text-cyan-400 font-bold">{components.length} SUB-SYSTEMS DETECTED</span>
           </div>
         </div>
 
-        {/* Device Metadata & Detected Specs */}
-        <div className="md:col-span-7 flex flex-col justify-between space-y-4">
+        {/* Right: Selected Component Detailed Telemetry HUD */}
+        <div className="lg:col-span-6 flex flex-col justify-between space-y-4">
+          {activeComponent ? (
+            <div className="bg-[#080D18] border border-cyan-500/30 rounded-2xl p-4 sm:p-5 relative font-mono">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <Layers className="w-3.5 h-3.5" />
+                  SUB-SYSTEM TELEMETRY DRILLDOWN
+                </span>
+                <span
+                  className={`text-[9px] font-bold px-2 py-0.5 rounded border ${
+                    activeComponent.statusType === 'defect'
+                      ? 'bg-rose-500/15 text-rose-400 border-rose-500/30'
+                      : activeComponent.statusType === 'warning'
+                      ? 'bg-amber-500/15 text-amber-400 border-amber-500/30'
+                      : 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                  }`}
+                >
+                  {activeComponent.status}
+                </span>
+              </div>
+
+              <h4 className="text-sm sm:text-base font-black font-['Outfit'] text-slate-100 mb-1">
+                {activeComponent.name}
+              </h4>
+              <p className="text-xs text-slate-400 font-sans mb-4">
+                Subsystem Type: <strong className="text-slate-200">{activeComponent.type}</strong> · Wear Score: <strong className="text-cyan-300">{activeComponent.wearScore}/100</strong>
+              </p>
+
+              {/* Specific Live Telemetry Key-Values */}
+              <div className="grid grid-cols-2 gap-2 text-xs mb-4">
+                {Object.entries(activeComponent.telemetry || {}).map(([key, val]) => {
+                  if (key === 'recommendation') return null;
+                  return (
+                    <div key={key} className="bg-[#0F172A] border border-[#1E293B] rounded-lg p-2.5">
+                      <div className="text-[10px] text-slate-500 uppercase font-bold">{key}</div>
+                      <div className="text-slate-200 font-bold text-[11px] mt-0.5">{val}</div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Bench Diagnostic Recommendation */}
+              {activeComponent.telemetry?.recommendation && (
+                <div className="p-3 rounded-xl bg-cyan-950/30 border border-cyan-500/30 text-xs">
+                  <span className="text-cyan-400 font-bold text-[10px] uppercase block mb-0.5">
+                    BENCH PROTOCOL:
+                  </span>
+                  <span className="text-slate-200 font-sans leading-relaxed">
+                    {activeComponent.telemetry.recommendation}
+                  </span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="p-6 bg-[#080D18] rounded-xl text-center text-slate-500 text-xs font-mono">
+              Select a component bounding box to inspect electrical telemetry.
+            </div>
+          )}
+
+          {/* Component Selection Pills */}
           <div>
-            <div className="text-xl font-bold font-['Outfit'] text-slate-50 mb-1">
-              {device.name}
+            <span className="text-[10px] font-mono font-bold uppercase text-slate-400 block mb-2">
+              Detected Hardware Sub-Assemblies:
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {components.map((comp) => {
+                const isSelected = comp.id === selectedCompId;
+                return (
+                  <button
+                    key={comp.id}
+                    onClick={() => setSelectedCompId(comp.id)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                      isSelected
+                        ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                        : 'bg-[#080D18] border border-[#1E293B] text-slate-400 hover:text-slate-200 hover:border-cyan-500/40'
+                    }`}
+                  >
+                    {comp.name.split(' ')[0]} ({comp.wearScore}%)
+                  </button>
+                );
+              })}
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Standard commercial laptop architecture with modular memory slots, removable lithium-ion cell pack, and serviceable display hinge rails.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2.5 text-xs">
-            <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-3">
-              <div className="text-slate-500 text-[10px] uppercase font-semibold flex items-center gap-1 mb-1">
-                <Tag className="w-3 h-3 text-teal-400" /> Category
-              </div>
-              <div className="font-semibold text-slate-200">{device.category}</div>
-            </div>
-
-            <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-3">
-              <div className="text-slate-500 text-[10px] uppercase font-semibold flex items-center gap-1 mb-1">
-                <Shield className="w-3 h-3 text-teal-400" /> Brand / OEM
-              </div>
-              <div className="font-semibold text-slate-200">{device.brand}</div>
-            </div>
-
-            <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-3">
-              <div className="text-slate-500 text-[10px] uppercase font-semibold flex items-center gap-1 mb-1">
-                <Calendar className="w-3 h-3 text-teal-400" /> Release Era
-              </div>
-              <div className="font-semibold text-slate-200">{device.releaseYear} (Gen 11)</div>
-            </div>
-
-            <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-3">
-              <div className="text-slate-500 text-[10px] uppercase font-semibold flex items-center gap-1 mb-1">
-                <Layers className="w-3 h-3 text-teal-400" /> Form Factor
-              </div>
-              <div className="font-semibold text-slate-200">14" Modular Ultrabook</div>
-            </div>
-          </div>
-
-          <div className="text-[11px] text-slate-400 bg-slate-900/60 rounded-lg p-2.5 border border-slate-800 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-teal-400 shrink-0" />
-            <span>Target detection matches Dell Latitude 5000 service manual catalog</span>
           </div>
         </div>
       </div>

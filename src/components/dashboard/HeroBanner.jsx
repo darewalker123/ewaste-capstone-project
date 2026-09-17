@@ -1,67 +1,82 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, ArrowRight, Leaf, ScanLine } from 'lucide-react';
+import { ScanLine, Wrench, Cpu, Radio, Scale, ShieldAlert, ArrowRight, Activity } from 'lucide-react';
+import { mockDashboardStats } from '../../data/mockData';
 
 export function HeroBanner() {
   const navigate = useNavigate();
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#111827] via-[#0F172A] to-[#134E4A]/30 border border-[#1E293B] p-6 sm:p-8 lg:p-10 mb-8 shadow-xl">
-      {/* Decorative ambient glow */}
-      <div className="absolute top-0 right-0 -mr-16 -mt-16 w-80 h-80 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-1/3 -mb-16 w-60 h-60 rounded-full bg-emerald-500/5 blur-2xl pointer-events-none" />
+    <div className="relative overflow-hidden rounded-2xl bg-[#0B1120] border border-[#1E293B] p-6 sm:p-7 mb-6 shadow-2xl">
+      {/* Tactical HUD Corner Marks */}
+      <div className="hud-corner-tl" />
+      <div className="hud-corner-tr" />
+      <div className="hud-corner-bl" />
+      <div className="hud-corner-br" />
 
-      <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+      {/* Subtle Scan Chamber Grid */}
+      <div className="absolute inset-0 scan-chamber-grid opacity-30 pointer-events-none" />
+
+      <div className="relative z-10 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6">
         <div className="max-w-2xl">
           {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs font-semibold uppercase tracking-wider mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-            <span>AI Lifecycle Intelligence</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono uppercase tracking-wider mb-3">
+            <Radio className="w-3 h-3 text-cyan-400 animate-led" />
+            <span>ELECTRONICS DIAGNOSTICS & CIRCULAR LCA LAB</span>
           </div>
 
           {/* Main Title & Subtitle */}
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-['Outfit'] text-slate-50 tracking-tight leading-tight mb-3">
-            Make a smarter choice for your electronics.
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-black font-['Outfit'] text-slate-50 tracking-tight leading-tight mb-2">
+            Hardware Health, RoHS Toxicity & Material Recovery Bench
           </h2>
-          <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl mb-6">
-            Analyze your device and discover the most sustainable next step.
-            Get instant repair diagnostics, carbon footprint savings, and certified drop-off locations.
+          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans max-w-xl mb-5">
+            Conduct multi-component optical defect segmentation, assess modular repairability, quantify toxic lead/lithium risks, and simulate circular lifecycle outcomes.
           </p>
 
-          {/* CTA Buttons */}
+          {/* Direct Workbench Launch Triggers */}
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={() => navigate('/analyze')}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-bold text-slate-950 bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-300 hover:to-emerald-300 active:from-teal-500 active:to-emerald-500 rounded-xl transition-all duration-200 shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-black font-mono text-slate-950 bg-gradient-to-r from-cyan-400 to-emerald-400 hover:from-cyan-300 hover:to-emerald-300 rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:-translate-y-0.5"
             >
               <ScanLine className="w-4 h-4" />
-              <span>Analyze a Device</span>
+              <span>LAUNCH SCAN CHAMBER</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
             <button
-              onClick={() => navigate('/centers')}
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-slate-300 bg-[#172033] hover:bg-[#1E293B] hover:text-white rounded-xl border border-[#1E293B] transition-all"
+              onClick={() => navigate('/troubleshooting')}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold font-mono text-slate-200 bg-[#0F172A] hover:bg-[#162036] hover:text-white rounded-xl border border-[#1E293B] hover:border-cyan-500/40 transition-all"
             >
-              <Leaf className="w-4 h-4 text-emerald-400" />
-              <span>Find Drop-Off Hubs</span>
+              <Wrench className="w-4 h-4 text-amber-400" />
+              <span>OPEN REPAIR COPILOT</span>
             </button>
           </div>
         </div>
 
-        {/* Highlight badge list */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 w-full lg:w-auto shrink-0">
-          <div className="bg-[#111827]/80 backdrop-blur-xs border border-[#1E293B] rounded-xl p-3.5">
-            <div className="text-xs text-slate-400 font-medium mb-1">Recommended Action</div>
-            <div className="text-base font-bold text-teal-300 flex items-center gap-1.5 font-['Outfit']">
-              <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" /> 59% Repair
+        {/* Live Lab Material Recovery & Toxicity Telemetry Ticker */}
+        <div className="grid grid-cols-2 gap-2.5 w-full xl:w-auto shrink-0 font-mono">
+          <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-3.5 relative overflow-hidden">
+            <div className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <Cpu className="w-3 h-3" /> Gold & Copper Diverted
+            </div>
+            <div className="text-base sm:text-lg font-black text-slate-100 font-mono">
+              {mockDashboardStats.materialRecovery.gold} <span className="text-xs text-slate-400 font-normal">/ {mockDashboardStats.materialRecovery.copper}</span>
+            </div>
+            <div className="text-[10px] text-emerald-400 mt-1 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Zero Landfill Purity
             </div>
           </div>
 
-          <div className="bg-[#111827]/80 backdrop-blur-xs border border-[#1E293B] rounded-xl p-3.5">
-            <div className="text-xs text-slate-400 font-medium mb-1">Avg Carbon Offset</div>
-            <div className="text-base font-bold text-emerald-300 flex items-center gap-1.5 font-['Outfit']">
-              <Leaf className="w-4 h-4 text-emerald-400" /> 38 kg CO₂e
+          <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-3.5 relative overflow-hidden">
+            <div className="text-[10px] text-amber-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <ShieldAlert className="w-3 h-3" /> Toxic Lead (Pb) Contained
+            </div>
+            <div className="text-base sm:text-lg font-black text-slate-100 font-mono">
+              {mockDashboardStats.toxicRiskAvoided.lead}
+            </div>
+            <div className="text-[10px] text-cyan-400 mt-1 flex items-center gap-1">
+              <Scale className="w-3 h-3" /> {mockDashboardStats.toxicRiskAvoided.carbonSavings}
             </div>
           </div>
         </div>

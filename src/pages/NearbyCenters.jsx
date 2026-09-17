@@ -2,16 +2,24 @@ import React, { useState } from 'react';
 import { MapPlaceholder } from '../components/centers/MapPlaceholder';
 import { CenterCard } from '../components/centers/CenterCard';
 import { CenterDetailModal } from '../components/centers/CenterDetailModal';
-import { mockAllCenters } from '../data/mockData';
-import { MapPin, Search, Wrench, Recycle } from 'lucide-react';
+import { mockNearbyCenters } from '../data/mockData';
+import { MapPin, Search, Radio, X } from 'lucide-react';
 
 export function NearbyCenters() {
-  const [selectedCategory, setSelectedCategory] = useState('all'); // 'all' | 'repair' | 'recycling'
+  const [selectedCategory, setSelectedCategory] = useState('all'); // 'all' | 'repair' | 'recycling' | 'donation' | 'dropoff'
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCenter, setSelectedCenter] = useState(mockAllCenters[0]);
+  const [selectedCenter, setSelectedCenter] = useState(mockNearbyCenters[0]);
   const [modalCenter, setModalCenter] = useState(null);
 
-  const filteredCenters = mockAllCenters.filter((c) => {
+  const filterOptions = [
+    { id: 'all', label: 'All Certified Hubs' },
+    { id: 'repair', label: 'Rework & Refurbish' },
+    { id: 'recycling', label: 'R2v3 Smelters' },
+    { id: 'donation', label: 'STEM Reuse Depots' },
+    { id: 'dropoff', label: '24/7 Drop-Off' },
+  ];
+
+  const filteredCenters = mockNearbyCenters.filter((c) => {
     const matchesCategory =
       selectedCategory === 'all' || c.category === selectedCategory;
     const matchesSearch =
@@ -22,27 +30,27 @@ export function NearbyCenters() {
   });
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
+    <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="bg-[#111827] border border-[#1E293B] rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 sm:p-7 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs font-semibold uppercase tracking-wider mb-2">
-            <MapPin className="w-3.5 h-3.5 text-teal-400" />
-            <span>Local Circular Network</span>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono uppercase tracking-wider mb-2">
+            <Radio className="w-3 h-3 text-cyan-400 animate-led" />
+            <span>CERTIFIED CIRCULAR DISPOSITION NETWORK</span>
           </div>
 
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold font-['Outfit'] text-slate-50 tracking-tight">
-            Nearby Repair & Recycling Centers
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-black font-['Outfit'] text-slate-50 tracking-tight">
+            Certified Intake Hubs & Smelters
           </h2>
 
-          <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl leading-relaxed">
-            Locate certified micro-soldering repair workshops, modular hardware specialists, and certified zero-landfill e-waste recyclers.
+          <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl leading-relaxed font-sans">
+            Locate verified R2v3 / e-Stewards electronics recycling smelters, IPC-certified repair workshops, and community reuse depots.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 bg-[#0F172A] border border-[#1E293B] px-3.5 py-2 rounded-xl text-xs text-slate-300 shrink-0">
+        <div className="flex items-center gap-2 bg-[#080D18] border border-[#1E293B] px-4 py-2 rounded-xl text-xs font-mono text-slate-300 shrink-0">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>Active Hubs within 10 km: <strong className="text-teal-400">{mockAllCenters.length}</strong></span>
+          <span>VERIFIED NETWORK: <strong className="text-cyan-400">{mockNearbyCenters.length} HUBS IN RADIUS</strong></span>
         </div>
       </div>
 
@@ -57,75 +65,65 @@ export function NearbyCenters() {
       />
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#111827] border border-[#1E293B] rounded-2xl p-3 sm:p-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#0F172A] border border-[#1E293B] rounded-2xl p-4 shadow-xl font-mono">
         {/* Category Filter Pills */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setSelectedCategory('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              selectedCategory === 'all'
-                ? 'bg-teal-500 text-slate-950 font-bold shadow-sm shadow-teal-500/20'
-                : 'bg-[#0F172A] text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            All Centers ({mockAllCenters.length})
-          </button>
-
-          <button
-            onClick={() => setSelectedCategory('repair')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              selectedCategory === 'repair'
-                ? 'bg-teal-500 text-slate-950 font-bold shadow-sm'
-                : 'bg-[#0F172A] text-teal-400 hover:bg-[#172033]'
-            }`}
-          >
-            <Wrench className="w-3.5 h-3.5" />
-            <span>Repair Centers (3)</span>
-          </button>
-
-          <button
-            onClick={() => setSelectedCategory('recycling')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-              selectedCategory === 'recycling'
-                ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
-                : 'bg-[#0F172A] text-amber-400 hover:bg-[#172033]'
-            }`}
-          >
-            <Recycle className="w-3.5 h-3.5" />
-            <span>Recycling Hubs (3)</span>
-          </button>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {filterOptions.map((opt) => (
+            <button
+              key={opt.id}
+              onClick={() => setSelectedCategory(opt.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                selectedCategory === opt.id
+                  ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                  : 'bg-[#080D18] border border-[#1E293B] text-slate-400 hover:text-slate-200 hover:border-cyan-500/30'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
         </div>
 
-        {/* Search */}
-        <div className="relative w-full sm:w-64">
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
+        {/* Search Input */}
+        <div className="relative w-full sm:w-64 font-sans">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by name, address, or service..."
-            className="w-full bg-[#0F172A] border border-[#1E293B] rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-hidden focus:border-teal-500/60"
+            placeholder="Search hub name or service..."
+            className="w-full bg-[#080D18] border border-[#1E293B] rounded-xl pl-9 pr-4 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/30 font-sans"
           />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-200"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Center Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Centers Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredCenters.map((center) => (
           <CenterCard
             key={center.id}
             center={center}
             isSelected={selectedCenter?.id === center.id}
-            onSelect={() => setSelectedCenter(center)}
+            onSelect={() => {
+              setSelectedCenter(center);
+              setModalCenter(center);
+            }}
             onViewDetails={(c) => setModalCenter(c)}
           />
         ))}
       </div>
 
-      {/* Center Detail Modal */}
+      {/* Facility Detail Modal */}
       <CenterDetailModal
         center={modalCenter}
-        isOpen={Boolean(modalCenter)}
+        isOpen={!!modalCenter}
         onClose={() => setModalCenter(null)}
       />
     </div>

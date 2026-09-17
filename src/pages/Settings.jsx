@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Settings as SettingsIcon, User, Bell, Palette, Info, Check, Moon, LogOut } from 'lucide-react';
+import { Settings as SettingsIcon, User, Bell, Palette, Info, Check, Cpu, LogOut, Radio, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function Settings() {
   const navigate = useNavigate();
   const [profileName, setProfileName] = useState('Alex Morgan');
   const [profileEmail, setProfileEmail] = useState('alex.morgan@university.edu');
+  const [benchId, setBenchId] = useState('BENCH-8902-A');
   const [notifyAnalysis, setNotifyAnalysis] = useState(true);
-  const [notifyTips, setNotifyTips] = useState(true);
-  const [notifyDropoff, setNotifyDropoff] = useState(false);
+  const [notifyRoHS, setNotifyRoHS] = useState(true);
+  const [notifySmelter, setNotifySmelter] = useState(true);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   const handleSave = (e) => {
@@ -18,242 +19,166 @@ export function Settings() {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6 max-w-4xl mx-auto font-sans">
       {/* Header */}
-      <div className="bg-[#111827] border border-[#1E293B] rounded-2xl p-6 sm:p-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs font-semibold uppercase tracking-wider mb-3">
-          <SettingsIcon className="w-3.5 h-3.5 text-teal-400" />
-          <span>System & Preferences</span>
+      <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 sm:p-7 shadow-xl">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono uppercase tracking-wider mb-2">
+          <Radio className="w-3 h-3 text-cyan-400 animate-led" />
+          <span>BENCH CALIBRATION & SYSTEM PREFERENCES</span>
         </div>
 
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold font-['Outfit'] text-slate-50 tracking-tight">
-          Settings
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-black font-['Outfit'] text-slate-50 tracking-tight">
+          Lab Station Settings
         </h2>
 
         <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl leading-relaxed">
-          Configure diagnostic preferences, notifications, and review the project design system specifications.
+          Manage hardware diagnostician credentials, optical telemetry thresholds, and certified smelter dispatch parameters.
         </p>
       </div>
 
       <form onSubmit={handleSave} className="space-y-6">
-        {/* Profile Section */}
-        <div className="bg-[#111827] border border-[#1E293B] rounded-2xl p-5 sm:p-6 space-y-4">
+        {/* Bench Diagnostician Profile */}
+        <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl">
           <div className="flex items-center gap-2.5 pb-3 border-b border-[#1E293B]">
-            <div className="p-2 rounded-xl bg-teal-500/10 text-teal-400">
+            <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
               <User className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-bold font-['Outfit'] text-slate-100">
-                User Profile
+              <h3 className="text-sm sm:text-base font-black font-['Outfit'] text-slate-100">
+                Lead Diagnostician Profile
               </h3>
-              <p className="text-xs text-slate-400">
-                Local demonstration account details
+              <p className="text-xs text-slate-400 font-mono">
+                Hardware Bench Station Credentials
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Display Name</label>
+              <label className="text-[11px] font-bold text-slate-300 uppercase">Operator Name</label>
               <input
                 type="text"
                 value={profileName}
                 onChange={(e) => setProfileName(e.target.value)}
-                className="w-full bg-[#0F172A] border border-[#1E293B] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-100 focus:outline-hidden focus:border-teal-500/60"
+                className="w-full bg-[#080D18] border border-[#1E293B] rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500/60 font-sans"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Email Address</label>
+              <label className="text-[11px] font-bold text-slate-300 uppercase">Institutional Email</label>
               <input
                 type="email"
                 value={profileEmail}
                 onChange={(e) => setProfileEmail(e.target.value)}
-                className="w-full bg-[#0F172A] border border-[#1E293B] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-100 focus:outline-hidden focus:border-teal-500/60"
+                className="w-full bg-[#080D18] border border-[#1E293B] rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500/60 font-sans"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-bold text-slate-300 uppercase">Station Hardware ID</label>
+              <input
+                type="text"
+                value={benchId}
+                onChange={(e) => setBenchId(e.target.value)}
+                className="w-full bg-[#080D18] border border-[#1E293B] rounded-xl px-3.5 py-2 text-xs text-cyan-400 font-bold focus:outline-none focus:border-cyan-500/60 font-mono"
               />
             </div>
           </div>
         </div>
 
-        {/* Appearance & Theme (Dark-Only Display) */}
-        <div className="bg-[#111827] border border-[#1E293B] rounded-2xl p-5 sm:p-6 space-y-4">
+        {/* Telemetry & Notification Triggers */}
+        <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl">
           <div className="flex items-center gap-2.5 pb-3 border-b border-[#1E293B]">
-            <div className="p-2 rounded-xl bg-teal-500/10 text-teal-400">
-              <Palette className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="text-sm sm:text-base font-bold font-['Outfit'] text-slate-100">
-                Appearance & Theme
-              </h3>
-              <p className="text-xs text-slate-400">
-                High-contrast dark design system optimized for hardware diagnostic focus
-              </p>
-            </div>
-          </div>
-
-          <div className="p-4 rounded-xl bg-[#0F172A] border border-teal-500/30 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-teal-500/20 text-teal-400 border border-teal-500/30">
-                <Moon className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="text-xs sm:text-sm font-bold text-slate-100">
-                  Dark Mode (Active & Locked)
-                </div>
-                <div className="text-[11px] text-teal-400">
-                  Deep Navy (#0B1120) with Slate (#0F172A) and Teal (#14B8A6) Highlights
-                </div>
-              </div>
-            </div>
-
-            <span className="text-xs font-semibold text-teal-300 bg-teal-500/10 px-2.5 py-1 rounded-full border border-teal-500/20">
-              Standard Theme
-            </span>
-          </div>
-
-          {/* Palette Preview Swatches */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
-            <div className="p-2.5 rounded-lg bg-[#0B1120] border border-[#1E293B] text-[10px] text-slate-400 font-mono">
-              <div className="w-4 h-4 rounded bg-[#0B1120] border border-slate-700 mb-1" />
-              Primary: #0B1120
-            </div>
-            <div className="p-2.5 rounded-lg bg-[#0F172A] border border-[#1E293B] text-[10px] text-slate-400 font-mono">
-              <div className="w-4 h-4 rounded bg-[#0F172A] border border-slate-700 mb-1" />
-              Sidebar: #0F172A
-            </div>
-            <div className="p-2.5 rounded-lg bg-[#111827] border border-[#1E293B] text-[10px] text-slate-400 font-mono">
-              <div className="w-4 h-4 rounded bg-[#111827] border border-slate-700 mb-1" />
-              Cards: #111827
-            </div>
-            <div className="p-2.5 rounded-lg bg-[#14B8A6]/10 border border-teal-500/30 text-[10px] text-teal-300 font-mono">
-              <div className="w-4 h-4 rounded bg-[#14B8A6] mb-1" />
-              Teal: #14B8A6
-            </div>
-          </div>
-        </div>
-
-        {/* Notifications Preferences */}
-        <div className="bg-[#111827] border border-[#1E293B] rounded-2xl p-5 sm:p-6 space-y-4">
-          <div className="flex items-center gap-2.5 pb-3 border-b border-[#1E293B]">
-            <div className="p-2 rounded-xl bg-teal-500/10 text-teal-400">
+            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
               <Bell className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-bold font-['Outfit'] text-slate-100">
-                Notification Preferences
+              <h3 className="text-sm sm:text-base font-black font-['Outfit'] text-slate-100">
+                Hardware Alerts & Telemetry Triggers
               </h3>
-              <p className="text-xs text-slate-400">
-                Simulated alert triggers and lifecycle progress updates
+              <p className="text-xs text-slate-400 font-mono">
+                Real-time notifications for critical RoHS events and recovery audits
               </p>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <label className="flex items-center justify-between p-3 rounded-xl bg-[#0F172A] border border-[#1E293B] cursor-pointer hover:bg-[#172033] transition-colors">
+          <div className="space-y-3 font-sans">
+            <label className="flex items-center justify-between p-3 rounded-xl bg-[#080D18] border border-[#1E293B] cursor-pointer hover:border-cyan-500/30 transition-colors">
               <div>
-                <div className="text-xs font-semibold text-slate-200">
-                  Analysis Completion Alerts
-                </div>
-                <div className="text-[11px] text-slate-400">
-                  Notify when multi-stage AI assessment finishes evaluating hardware
-                </div>
+                <div className="text-xs font-bold text-slate-200">Hardware Scan Telemetry Cleared</div>
+                <div className="text-[11px] text-slate-400">Receive alerts when optical bounding box segmentation is finalized.</div>
               </div>
               <input
                 type="checkbox"
                 checked={notifyAnalysis}
                 onChange={(e) => setNotifyAnalysis(e.target.checked)}
-                className="w-4 h-4 accent-teal-500 rounded"
+                className="w-4 h-4 accent-cyan-400 rounded cursor-pointer"
               />
             </label>
 
-            <label className="flex items-center justify-between p-3 rounded-xl bg-[#0F172A] border border-[#1E293B] cursor-pointer hover:bg-[#172033] transition-colors">
+            <label className="flex items-center justify-between p-3 rounded-xl bg-[#080D18] border border-[#1E293B] cursor-pointer hover:border-cyan-500/30 transition-colors">
               <div>
-                <div className="text-xs font-semibold text-slate-200">
-                  Sustainability Milestones
-                </div>
-                <div className="text-[11px] text-slate-400">
-                  Periodic summary of total kilograms of CO₂e emissions avoided
-                </div>
+                <div className="text-xs font-bold text-slate-200">RoHS Toxic Hazard & Li-ion Warning Trigger</div>
+                <div className="text-[11px] text-slate-400">Alert immediately upon detecting swollen cells or hazardous heavy metals.</div>
               </div>
               <input
                 type="checkbox"
-                checked={notifyTips}
-                onChange={(e) => setNotifyTips(e.target.checked)}
-                className="w-4 h-4 accent-teal-500 rounded"
+                checked={notifyRoHS}
+                onChange={(e) => setNotifyRoHS(e.target.checked)}
+                className="w-4 h-4 accent-cyan-400 rounded cursor-pointer"
               />
             </label>
 
-            <label className="flex items-center justify-between p-3 rounded-xl bg-[#0F172A] border border-[#1E293B] cursor-pointer hover:bg-[#172033] transition-colors">
+            <label className="flex items-center justify-between p-3 rounded-xl bg-[#080D18] border border-[#1E293B] cursor-pointer hover:border-cyan-500/30 transition-colors">
               <div>
-                <div className="text-xs font-semibold text-slate-200">
-                  Nearby Drop-Off Hub Reminders
-                </div>
-                <div className="text-[11px] text-slate-400">
-                  Operating hours alerts for nearby certified repair workshops
-                </div>
+                <div className="text-xs font-bold text-slate-200">Certified Smelter Intake Match Updates</div>
+                <div className="text-[11px] text-slate-400">Receive R2v3 and e-Stewards drop-off capacity alerts.</div>
               </div>
               <input
                 type="checkbox"
-                checked={notifyDropoff}
-                onChange={(e) => setNotifyDropoff(e.target.checked)}
-                className="w-4 h-4 accent-teal-500 rounded"
+                checked={notifySmelter}
+                onChange={(e) => setNotifySmelter(e.target.checked)}
+                className="w-4 h-4 accent-cyan-400 rounded cursor-pointer"
               />
             </label>
           </div>
         </div>
 
-        {/* Project Capstone Info */}
-        <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-5 text-xs text-slate-400 space-y-2">
-          <div className="flex items-center gap-2 text-slate-300 font-bold">
-            <Info className="w-4 h-4 text-teal-400" />
-            <span>Final-Year Capstone Project Architecture</span>
-          </div>
-          <p className="leading-relaxed">
-            AI-Powered Sustainable E-Waste Assistant • Frontend UI Prototype Phase.
-            Fully self-contained modular React architecture adhering to strict dark palette design standards.
-          </p>
-        </div>
-
-        {/* Save Button */}
-        <div className="flex items-center justify-between pt-2">
-          <span className="text-xs text-slate-500">
-            Changes persist locally across session state
-          </span>
-
-          <div className="flex items-center gap-3">
-            {saveSuccess && (
-              <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1">
-                <Check className="w-4 h-4" /> Preferences Saved!
-              </span>
-            )}
-            <button
-              type="submit"
-              className="px-6 py-2.5 rounded-xl bg-teal-400 hover:bg-teal-300 active:bg-teal-500 text-slate-950 font-bold text-xs sm:text-sm transition-all shadow-md shadow-teal-500/20"
-            >
-              Save Preferences
-            </button>
-          </div>
+        {/* Save Bar */}
+        <div className="flex items-center justify-end gap-3 font-mono">
+          {saveSuccess && (
+            <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
+              <Check className="w-4 h-4" /> BENCH CALIBRATION SAVED!
+            </span>
+          )}
+          <button
+            type="submit"
+            className="px-6 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs transition-all shadow-md shadow-cyan-500/20"
+          >
+            SAVE PREFERENCES
+          </button>
         </div>
       </form>
-      {/* Danger Zone — Logout */}
-      <div className="bg-[#111827] border border-rose-500/20 rounded-2xl p-6 sm:p-8">
+
+      {/* Danger Zone — Sign Out */}
+      <div className="bg-[#0F172A] border border-rose-500/20 rounded-2xl p-6 sm:p-7 shadow-xl font-sans">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h3 className="text-sm font-bold text-rose-400 mb-1 flex items-center gap-2">
+            <h3 className="text-sm font-black text-rose-400 mb-1 flex items-center gap-2 font-mono">
               <LogOut className="w-4 h-4" />
-              Sign Out
+              END LAB SESSION
             </h3>
             <p className="text-xs text-slate-400 max-w-sm">
-              You will be returned to the login screen. Your settings and preferences will be preserved.
+              Sign out of the current hardware bench station. Local telemetry calibration logs will be safely stored.
             </p>
           </div>
           <button
             type="button"
             onClick={() => navigate('/login')}
-            className="shrink-0 px-6 py-2.5 rounded-xl border border-rose-500/40 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 hover:border-rose-500/60 font-bold text-xs sm:text-sm transition-all flex items-center gap-2"
+            className="shrink-0 px-5 py-2.5 rounded-xl border border-rose-500/40 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 font-mono font-bold text-xs transition-all flex items-center gap-2"
           >
             <LogOut className="w-4 h-4" />
-            Logout
+            <span>SIGN OUT</span>
           </button>
         </div>
       </div>
